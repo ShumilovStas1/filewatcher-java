@@ -24,19 +24,11 @@ cd filewatcher-java
 ./mvnw spring-boot:run
 ```
 
-### Using java -jar
-
-After project build 
-
-```bash
-java -jar target/filewatcher-0.0.1-SNAPSHOT.jar
-```
-
 ## Docker support
-Build project and then 
+Build docker image:
 
 ```bash
-docker build -t filewatcher-java .
+./mvnw clean package spring-boot:build-image -Dspring-boot.build-image.imageName=filewatcher-java
 ```
 
 You can use docker-compose too. See `docker-compose.yml` for details.
