@@ -40,14 +40,3 @@ docker build -t filewatcher-java .
 ```
 
 You can use docker-compose too. See `docker-compose.yml` for details.
-
-## Usage
-
-```java
-FileWatcher watcher = new FileWatcher("/path/to/watch");
-watcher.start();
-```
-
-## License
-
-This project is licensed under the MIT License.
