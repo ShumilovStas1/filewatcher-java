@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  filewatcher:
+    image: filewatcher-java
+    container_name: filewatcher-java
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      DIRECTORIES_TO_WATCH: "/app/dir,/app/dir/sub"
+    volumes:
+      - ./dir:/app/dir
