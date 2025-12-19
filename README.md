@@ -13,6 +13,7 @@ cd filewatcher-java
 ## Run
 
 ### Using maven
+Port by default is 5001
 
 ```bash
 ./mvnw spring-boot:run
