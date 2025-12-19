@@ -10,12 +10,6 @@ git clone https://github.com/yourusername/filewatcher-java.git
 cd filewatcher-java
 ```
 
-## Build 
-
-```bash
-./mnvw package
-```
-
 ## Run
 
 ### Using maven
