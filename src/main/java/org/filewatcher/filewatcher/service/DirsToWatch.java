@@ -1,8 +1,8 @@
 package org.filewatcher.filewatcher.service;
 
+import org.filewatcher.filewatcher.conf.AppProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Files;
@@ -17,9 +17,8 @@ public class DirsToWatch {
     private static final Logger log = LoggerFactory.getLogger(DirsToWatch.class);
     private final List<Path> validDirs;
 
-    public DirsToWatch(@Value("#{'${directories.to.watch}'.split(',')}") List<Path> directoriesToWatch) {
-        Objects.requireNonNull(directoriesToWatch);
-        List<Path> sortedDirs = directoriesToWatch.stream()
+    public DirsToWatch(AppProperties conf) {
+        List<Path> sortedDirs = conf.watchDirs().stream()
                 .filter(Objects::nonNull)
                 .map(Path::toAbsolutePath)
                 .filter(this::isPathValid)

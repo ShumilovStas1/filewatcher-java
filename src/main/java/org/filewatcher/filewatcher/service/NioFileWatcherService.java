@@ -4,10 +4,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.filewatcher.filewatcher.FileEvent;
 import org.filewatcher.filewatcher.Type;
+import org.filewatcher.filewatcher.conf.AppProperties;
 import org.filewatcher.filewatcher.ws.FileEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -33,23 +34,25 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 @Service
-public class FileWatcherService {
-    private static final Logger log = LoggerFactory.getLogger(FileWatcherService.class);
+@ConditionalOnProperty(value = "fw.watcher-type", havingValue = "nio", matchIfMissing = true)
+public class NioFileWatcherService {
+    private static final Logger log = LoggerFactory.getLogger(NioFileWatcherService.class);
 
     private final DirsToWatch dirsToWatch;
     private final FileEventListener listener;
     private WatchService ws;
     private final ExecutorService pollEventsExecutor;
+    private final AppProperties properties;
     private final Set<Path> watchedDirs = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    @Value("${poll.thread.count:1}")
-    private int threadCount;
 
-    public FileWatcherService(DirsToWatch dirsToWatch,
-                              ExecutorService fileEventPollExecutor,
-                              FileEventListener listener) {
+    public NioFileWatcherService(DirsToWatch dirsToWatch,
+                                 ExecutorService fileEventPollExecutor,
+                                 FileEventListener listener,
+                                 AppProperties properties) {
         this.dirsToWatch = dirsToWatch;
         this.listener = listener;
         this.pollEventsExecutor = fileEventPollExecutor;
+        this.properties = properties;
     }
 
     @PostConstruct
@@ -60,8 +63,7 @@ public class FileWatcherService {
             for (Path toWatch : dirsToWatch.getAbsolutePaths()) {
                 registerWatch(toWatch.toAbsolutePath());
             }
-            int count = Math.max(1, threadCount);
-            IntStream.range(0, count).forEach(i -> {
+            IntStream.range(0, properties.nioWatcher().pollThreadCount()).forEach(i -> {
                 log.debug("Submitting pollEvents task to executor {}", i);
                 pollEventsExecutor.submit(this::pollEvents);
             });

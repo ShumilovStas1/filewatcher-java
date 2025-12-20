@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.filewatcher.filewatcher.FileEvent;
 import org.filewatcher.filewatcher.Type;
 import org.filewatcher.filewatcher.service.DirsToWatch;
-import org.filewatcher.filewatcher.service.FileWatcherService;
+import org.filewatcher.filewatcher.service.NioFileWatcherService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -35,7 +35,7 @@ class WsHandlerTest {
     @MockitoBean
     DirsToWatch dirsToWatch;
     @MockitoBean
-    FileWatcherService fileWatcherService;
+    NioFileWatcherService fileWatcherService;
 
     Socket client;
     volatile List<String> directories = List.of();
