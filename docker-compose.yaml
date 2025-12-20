@@ -8,6 +8,7 @@ services:
     ports:
       - "5001:5001"
     environment:
-      DIRECTORIES_TO_WATCH: "/app/dir,/app/dir/sub"
+      FW_WATCH_DIRS_0: "/app/dir"
+      FW_WATCH_DIRS_1: "/app/dir/sub"
     volumes:
       - ./dir:/app/dir
